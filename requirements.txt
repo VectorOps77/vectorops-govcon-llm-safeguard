@@ -1,0 +1,6 @@
+streamlit
+ollama
+pytest
+ruff
+bandit
+pip-audit

@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS files
+.DS_Store
+
+# Test/cache files
+.pytest_cache/
+.coverage
+
+# Local/private data
+local_data/
+private_data/
