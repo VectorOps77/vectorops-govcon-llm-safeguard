@@ -70,3 +70,17 @@ This project is for portfolio and educational purposes. It does not replace offi
 ## Portfolio Summary
 
 Built a local LLM-powered AI governance safeguard checker using Python, Streamlit, and Ollama. The application scans prompts for possible government data, CUI indicators, PII, contract identifiers, and procurement-sensitive content before generating an AI risk recommendation. The project demonstrates secure AI adoption, DevSecOps thinking, and responsible AI governance for government contracting environments.
+
+## Screenshots
+
+### Home Screen
+![Home Screen](docs/screenshots/home-screen.png)
+
+### Green Risk Result
+![Green Risk Result](docs/screenshots/green-result.png)
+
+### Yellow Risk Result
+![Yellow Risk Result](docs/screenshots/yellow-result.png)
+
+### Red Risk Result
+![Red Risk Result](docs/screenshots/red-result.png)
