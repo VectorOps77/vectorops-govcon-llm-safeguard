@@ -29,8 +29,9 @@ Government contractors are increasingly adopting AI tools, but many teams lack a
 
 ## Technology Stack
 
-* Python
+* Python 3.12
 * Streamlit
+* MCP Python SDK
 * Ollama
 * Local LLMs such as Llama 3 or Qwen
 * Pytest
@@ -49,6 +50,79 @@ Government contractors are increasingly adopting AI tools, but many teams lack a
 ## Example Use Case
 
 A project manager wants to paste a project update into an AI tool. Before doing so, they run the text through this safeguard checker. The tool scans the prompt, identifies potential risk indicators, and generates a governance recommendation.
+
+## MCP Server
+
+This project also exposes the same safeguard scanner as a local MCP server so compatible AI tools and custom agents can call it before using prompt content.
+
+### Tool
+
+| Tool | Purpose |
+| ---- | ------- |
+| `scan_govcon_prompt` | Scans prompt text and returns the same structured risk results as the Streamlit app |
+
+The tool returns JSON-compatible fields including `risk_score`, boolean risk indicators, and a `findings` list.
+
+### Run Locally
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Start the MCP server over stdio:
+
+```bash
+python mcp_server.py
+```
+
+Example result shape:
+
+```json
+{
+  "possible_pii": false,
+  "possible_contract_number": true,
+  "possible_government_data": true,
+  "possible_cui": false,
+  "possible_financial_data": false,
+  "risk_score": "Yellow",
+  "findings": [
+    "Possible contract or document identifier",
+    "Possible government-related data"
+  ]
+}
+```
+
+### Example MCP Client Configuration
+
+Add a local stdio server entry in an MCP-compatible client:
+
+```json
+{
+  "mcpServers": {
+    "vectorops-govcon-safeguard": {
+      "command": "python",
+      "args": [
+        "/absolute/path/to/vectorops-govcon-llm-safeguard/mcp_server.py"
+      ]
+    }
+  }
+}
+```
+
+Replace the path with the location of this repository on your machine.
+
+## Local Quality Checks
+
+Run the same checks used by the GitHub Actions pipeline:
+
+```bash
+python -m pytest
+ruff check .
+bandit -r . -x ./venv,./tests
+pip-audit -r requirements.txt --no-deps --disable-pip
+```
 
 ## Security Note
 
@@ -73,8 +147,6 @@ Built a local LLM-powered AI governance safeguard checker using Python, Streamli
 
 ## Screenshots
 
-### Home Screen
-![Home Screen](docs/screenshots/home-screen.png)
 
 ### Green Risk Result
 ![Green Risk Result](docs/screenshots/green-result.png)

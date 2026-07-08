@@ -50,7 +50,7 @@ if st.button("Run Safeguard Check"):
 
         st.subheader("Governance Questions")
 
-        st.write(f"**What data goes into the model?**")
+        st.write("**What data goes into the model?**")
         st.write("The pasted text would be the data submitted for AI processing.")
 
         st.write("**Is it government data?**")
