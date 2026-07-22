@@ -10,6 +10,8 @@ def test_scan_govcon_prompt_returns_structured_results():
     assert result["possible_government_data"] is True
     assert result["possible_contract_number"] is True
     assert "Possible government-related data" in result["findings"]
+    assert "[GOV_TERM_REDACTED]" in result["redacted_text"]
+    assert "[DOCUMENT_ID_REDACTED]" in result["redacted_text"]
 
 
 def test_server_name_identifies_vectorops_safeguard():

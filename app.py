@@ -282,6 +282,25 @@ def load_styles() -> None:
                 line-height: 1.35;
             }
 
+            .redaction-preview {
+                background: #071d3a;
+                border: 1px solid rgba(197, 162, 83, 0.65);
+                border-radius: 8px;
+                box-shadow: 0 12px 30px rgba(7, 29, 58, 0.12);
+                color: #ffffff;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                line-height: 1.5;
+                margin: 0.6rem 0 1rem;
+                overflow-x: auto;
+                padding: 1rem;
+                white-space: pre-wrap;
+            }
+
+            .redaction-summary {
+                color: var(--muted);
+                margin: 0.35rem 0 0.8rem;
+            }
+
             .question {
                 border-top: 1px solid var(--line);
                 padding: 0.8rem 0;
@@ -451,6 +470,29 @@ def render_findings(results: dict) -> None:
         st.write("No obvious risk indicators found.")
 
 
+def render_redaction_preview(results: dict) -> None:
+    redaction_count = results["redaction_count"]
+
+    st.markdown("## Redaction Preview")
+    if redaction_count == 0:
+        st.info("No redactions were needed for this prompt.")
+        return
+
+    st.markdown(
+        f'<div class="redaction-summary">{redaction_count} potential sensitive indicator(s) masked. Review the preview before sharing prompt text with an AI model.</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f'<div class="redaction-preview">{html.escape(results["redacted_text"])}</div>',
+        unsafe_allow_html=True,
+    )
+
+    for redaction in results["redactions"]:
+        st.write(
+            f'- {redaction["label"]}: {redaction["count"]} replaced with `{redaction["placeholder"]}`'
+        )
+
+
 def get_approval_guidance(results: dict) -> str:
     if results["risk_score"] == "Red":
         return "Security, data owner, PM, and contract leadership should review."
@@ -557,6 +599,8 @@ if scan_clicked:
             render_risk_card(results)
         with findings_col:
             render_findings(results)
+
+        render_redaction_preview(results)
 
         st.markdown("## Governance Guidance")
         render_governance(results)
